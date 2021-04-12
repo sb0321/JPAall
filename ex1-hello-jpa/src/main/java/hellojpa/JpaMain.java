@@ -19,7 +19,12 @@ public class JpaMain {
 
         try {
             // 영속
-            Member member1 = new Member(300L, "member200");
+            Member member = em.find(Member.class, 150L);
+            member.setName("AAAAA");
+
+            em.clear();
+
+            Member member2 = em.find(Member.class, 150L);
 
             System.out.println("=============");
 
