@@ -18,29 +18,10 @@ public class JpaMain {
         tx.begin();
 
         try {
-//            Member member = new Member();
-//            member.setId(2L);
-//            member.setName("helloB");
-//            em.persist(member);
+            // 영속
+            Member member1 = new Member(300L, "member200");
 
-            // 찾기
-//            Member findMember = em.find(Member.class, 1L);
-
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
-                    .setFirstResult(5)
-                    .setMaxResults(8)
-                    .getResultList();
-
-            for (Member member : result) {
-                System.out.println("memeber.getName = " + member.getName());
-            }
-
-//            System.out.println("findMember = " + findMember.getId());
-//            System.out.println("findMember = " + findMember.getName());
-
-//            findMember.setName("HelloJPA");
-
-
+            System.out.println("=============");
 
             tx.commit();
         } catch (Exception e) {
