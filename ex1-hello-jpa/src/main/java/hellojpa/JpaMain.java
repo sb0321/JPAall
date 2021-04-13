@@ -19,14 +19,12 @@ public class JpaMain {
 
         try {
             // 영속
-            Member member = em.find(Member.class, 150L);
-            member.setName("AAAAA");
+            Member member = new Member();
+            member.setId(1L);
+            member.setName("A");
+            member.setRoleType(RoleType.GUEST);
 
-            em.clear();
-
-            Member member2 = em.find(Member.class, 150L);
-
-            System.out.println("=============");
+            em.persist(member);
 
             tx.commit();
         } catch (Exception e) {
