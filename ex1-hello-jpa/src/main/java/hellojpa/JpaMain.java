@@ -4,8 +4,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import java.time.LocalDateTime;
-import java.util.List;
 
 public class JpaMain {
 
@@ -20,16 +18,35 @@ public class JpaMain {
 
         try {
 
-            Member member = new Member();
-            member.setCreatedBy("kim");
-            member.setCreatedDate(LocalDateTime.now());
-            member.setUsername("user");
+            Member member1 = new Member();
+            member1.setUsername("member1");
+            em.persist(member1);
 
-
-            em.persist(member);
+            Member member2 = new Member();
+            member1.setUsername("member2");
+            em.persist(member2);
 
             em.flush();
             em.clear();
+
+            Member m1 = em.find(Member.class, member1.getId());
+            Member m2 = em.getReference(Member.class, member2.getId());
+
+            System.out.println("m1 == m2: " + (m1.getClass() == m2.getClass()));
+
+
+////            Member findMember = em.find(Member.class, member.getId());
+//
+//            Member findMember = em.getReference(Member.class, member.getId());
+//
+////            실제 객체가 없는 상태
+//            System.out.println("before findMember = " + findMember.getClass());
+//            System.out.println("findMember.username = " + findMember.getUsername());
+//
+////            프록시가 객체를 받아옴
+//            System.out.println("before findMember = " + findMember.getClass());
+//            System.out.println("findMember.username = " + findMember.getUsername());
+
 
 
             tx.commit();
