@@ -22,18 +22,25 @@ public class JpaMain {
             member1.setUsername("member1");
             em.persist(member1);
 
-            Member member2 = new Member();
-            member1.setUsername("member2");
-            em.persist(member2);
+            Team team = new Team();
+            team.setName("teamA");
+            member1.setTeam(team);
+            em.persist(team);
 
             em.flush();
             em.clear();
 
-            Member m1 = em.find(Member.class, member1.getId());
-            Member m2 = em.getReference(Member.class, member2.getId());
+            Member m = em.find(Member.class, member1.getId());
 
-            System.out.println("m1 == m2: " + (m1.getClass() == m2.getClass()));
+            System.out.println("m = " + m.getTeam().getClass());
 
+            System.out.println("=================");
+            m.getTeam().getName(); // 초기화
+            System.out.println("=================");
+
+
+//            Member findMember = em.find(Member.class, member1.getId());
+//            System.out.println("reference = " + findMember.getClass()); // Member
 
 ////            Member findMember = em.find(Member.class, member.getId());
 //
@@ -51,6 +58,7 @@ public class JpaMain {
 
             tx.commit();
         } catch (Exception e) {
+            e.printStackTrace();
             tx.rollback();
         } finally {
             em.close();
