@@ -17,70 +17,46 @@ public class JpaMain {
 
         try {
 
-            Team team = new Team();
-            em.persist(team);
+            Team teamA = new Team();
+            teamA.setName("팀A");
+            em.persist(teamA);
+
+            Team teamB = new Team();
+            teamB.setName("팀B");
+            em.persist(teamB);
 
             Member member1 = new Member();
-            member1.setUsername("관리자1");
-            member1.changeTeam(team);
-            member1.setAge(20);
+            member1.setUsername("회원1");
+            member1.changeTeam(teamA);
+            em.persist(member1);
 
             Member member2 = new Member();
-            member2.setUsername("관리자2");
-            member2.changeTeam(team);
-            member2.setAge(10);
-
-            em.persist(member1);
+            member2.setUsername("회원2");
+            member2.changeTeam(teamA);
             em.persist(member2);
+
+            Member member3 = new Member();
+            member3.setUsername("회원3");
+            member3.changeTeam(teamB);
+            em.persist(member3);
 
 
             em.flush();
             em.clear();
 
-//            String query = "select concat('a', 'b') from Member m";
-//            String query = "select substring(m.username, 2, 3) from Member m";
-//            String query = "select locate('de', 'abcdegf') from Member m";
-//            String query = "select size(t.members) from Team t";
-//            String query = "select group_concat(m.username) from Member m";
+            String query = "select m from Member m join fetch m.team";
 
+            List<Member> result = em.createQuery(query, Member.class).getResultList();
 
-            String query = "select m.username from Team t join t.members m";
+            for (Member member : result) {
+                System.out.println("member = " + member.getUsername() + ", " + member.getTeam().getName());
+                // 회원1, 팀A(SQL)
+                // 회원2, 팀A(1차 캐시)
+                // 회원3, 팀B(SQL)
 
-            List<String> result = em.createQuery(query, String.class).getResultList();
+                // 회원 100명 -> 퀴리가 100번 나갈 수도 있음 -> N + 1 문제
+            }
 
-            System.out.println("result = " + result);
-            
-//            String query = "select nullif(m.username, '관리자') from Member m";
-//            List<String> result = em.createQuery(query, String.class).getResultList();
-//
-//            for (String s : result) {
-//                System.out.println("s = " + s);
-//            }
-
-//            String query =
-//                    "select " +
-//                        "case when m.age <= 10 then '학생요금' " +
-//                        "     when m.age >= 60 then '경로요금' " +
-//                        "     else '일반요금' " +
-//                        "end " +
-//                    "from Member m";
-//
-//            List<String> result = em.createQuery(query, String.class).getResultList();
-//            for (String s : result) {
-//                System.out.println("s = " + s);
-//            }
-
-
-//            String query = "select m.username , 'HELLO', TRUE from Member m where m.type = :userType";
-//            List<Object[]> result = em.createQuery(query)
-//                    .setParameter("userType", MemberType.ADMIN)
-//                    .getResultList();
-
-//            for (Object[] objects : result) {
-//                System.out.println("objects = " + objects[0]);
-//                System.out.println("objects = " + objects[1]);
-//                System.out.println("objects = " + objects[2]);
-//            }
             
             tx.commit();
         } catch (Exception e) {
