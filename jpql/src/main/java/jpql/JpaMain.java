@@ -31,12 +31,23 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            String query = "select nullif(m.username, '관리자') from Member m";
-            List<String> result = em.createQuery(query, String.class).getResultList();
+//            String query = "select concat('a', 'b') from Member m";
+//            String query = "select substring(m.username, 2, 3) from Member m";
+//            String query = "select locate('de', 'abcdegf') from Member m";
+            String query = "select size(t.members) from Team t";
 
-            for (String s : result) {
+            List<Integer> result = em.createQuery(query, Integer.class).getResultList();
+
+            for (Integer s : result) {
                 System.out.println("s = " + s);
             }
+
+//            String query = "select nullif(m.username, '관리자') from Member m";
+//            List<String> result = em.createQuery(query, String.class).getResultList();
+//
+//            for (String s : result) {
+//                System.out.println("s = " + s);
+//            }
 
 //            String query =
 //                    "select " +
