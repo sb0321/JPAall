@@ -21,14 +21,15 @@ public class JpaMain {
             member.setAge(10);
             em.persist(member);
 
+            em.flush();
+            em.clear();
 
-            // 쿼리 이름 기준
-            Member singleResult = em.createQuery("select m from Member as m where m.username = :username", Member.class)
-                    .setParameter("username", "member1")
-                    .getSingleResult();
+            List<MemberDTO> result = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class)
+                    .getResultList();
 
-            System.out.println("singleResult = " + singleResult.getUsername());
-
+            MemberDTO memberDTO = result.get(0);
+            System.out.println("memberDTO.getUsername() = " + memberDTO.getUsername());
+            System.out.println("memberDTO.getAge() = " + memberDTO.getAge());
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
