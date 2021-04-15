@@ -44,17 +44,19 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            String query = "select m from Member m join fetch m.team";
+//            String query = "select m from Member m join fetch m.team";
+            String query = "select distinct t from Team t join fetch t.members";
 
-            List<Member> result = em.createQuery(query, Member.class).getResultList();
 
-            for (Member member : result) {
-                System.out.println("member = " + member.getUsername() + ", " + member.getTeam().getName());
-                // 회원1, 팀A(SQL)
-                // 회원2, 팀A(1차 캐시)
-                // 회원3, 팀B(SQL)
+            List<Team> result = em.createQuery(query, Team.class).getResultList();
 
-                // 회원 100명 -> 퀴리가 100번 나갈 수도 있음 -> N + 1 문제
+            System.out.println("result = " + result.size());
+
+            for (Team team : result) {
+                System.out.println("team = " + team.getName() + " |members" + team.getMembers().size());
+                for (Member member : team.getMembers()) {
+                    System.out.println("-> member = " + member);
+                }
             }
 
             
